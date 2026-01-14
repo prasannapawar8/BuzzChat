@@ -45,19 +45,30 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
 
         {/* File Display */}
         {message.fileUrl && (
-          <a
-            href={message.fileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`mt-2 flex items-center gap-2 p-2 rounded-lg transition ${
-              isOwn
-                ? "bg-white/20 hover:bg-white/30"
-                : "bg-slate-600/50 hover:bg-slate-600"
-            }`}
-          >
-            <FiDownload size={16} />
-            <span className="text-sm truncate">Download File</span>
-          </a>
+          <div className="mt-2">
+            {message.fileUrl.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+              <img
+                src={message.fileUrl}
+                alt="Shared file"
+                className="max-w-xs rounded-lg mt-2 cursor-pointer hover:opacity-80"
+                onClick={() => window.open(message.fileUrl, "_blank")}
+              />
+            ) : (
+              <a
+                href={message.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-2 p-2 rounded-lg transition ${
+                  isOwn
+                    ? "bg-white/20 hover:bg-white/30"
+                    : "bg-slate-600/50 hover:bg-slate-600"
+                }`}
+              >
+                <FiDownload size={16} />
+                <span className="text-sm truncate">Download File</span>
+              </a>
+            )}
+          </div>
         )}
 
         {/* Time and Actions */}

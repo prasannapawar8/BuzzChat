@@ -9,7 +9,7 @@ const messageSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: [true, 'Message content cannot be empty'],
+      default: '',
     },
     chat: {
       type: mongoose.Schema.Types.ObjectId,

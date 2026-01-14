@@ -8,8 +8,12 @@ export const sendMessage = async (req, res, next) => {
   try {
     const { content, chatId } = req.body;
 
-    if (!content && !req.file) {
-      return res.status(400).json({ message: 'Message content or file is required' });
+    // Validate that either content or file is provided
+    const hasContent = content && content.trim() !== '';
+    const hasFile = req.file && req.file.buffer;
+
+    if (!hasContent && !hasFile) {
+      return res.status(400).json({ message: 'Please provide message content or attach a file' });
     }
 
     if (!chatId) {
@@ -19,18 +23,21 @@ export const sendMessage = async (req, res, next) => {
     let fileUrl = null;
 
     // Handle file upload if exists
-    if (req.file) {
+    if (hasFile) {
       try {
+        console.log('Uploading file:', req.file.originalname, 'Size:', req.file.size, 'Type:', req.file.mimetype);
         const uploadedFile = await uploadToCloudinary(req.file);
         fileUrl = uploadedFile.secure_url;
+        console.log('File uploaded successfully:', fileUrl);
       } catch (uploadError) {
+        console.error('Cloudinary upload error:', uploadError);
         return res.status(500).json({ message: 'Error uploading file: ' + uploadError.message });
       }
     }
 
     let messageData = {
       sender: req.userId,
-      content: content || 'Sent a file',
+      content: hasContent ? content.trim() : '',
       chat: chatId,
     };
 
@@ -50,11 +57,20 @@ export const sendMessage = async (req, res, next) => {
     // Update chat's lastMessage
     await Chat.findByIdAndUpdate(chatId, { lastMessage: message._id });
 
+    console.log('Final message object being sent:', {
+      _id: message._id,
+      content: message.content,
+      fileUrl: message.fileUrl,
+      sender: message.sender._id,
+      createdAt: message.createdAt,
+    });
+
     res.status(201).json({
       success: true,
       message,
     });
   } catch (error) {
+    console.error('Send message error:', error);
     res.status(500).json({ message: error.message });
   }
 };

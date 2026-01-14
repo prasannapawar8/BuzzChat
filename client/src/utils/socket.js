@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useAuthStore, useChatStore } from './store';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
 
 let socket = null;
 
@@ -35,6 +35,7 @@ export const useSocket = () => {
     });
 
     socket.on('message received', (message) => {
+      console.log('Message received via socket:', message);
       addMessage(message);
     });
 

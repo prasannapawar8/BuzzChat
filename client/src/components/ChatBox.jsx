@@ -81,24 +81,30 @@ export default function ChatBox({ chat, currentUser }) {
     e.preventDefault();
 
     if (!messageInput.trim() && !selectedFile) {
+      toast.error("Please enter a message or select a file");
       return;
     }
 
     try {
       setIsUploading(true);
       const formData = new FormData();
-      formData.append("content", messageInput);
+      formData.append("content", messageInput.trim());
       formData.append("chatId", chat._id);
 
       if (selectedFile) {
+        console.log(
+          "Sending file:",
+          selectedFile.name,
+          "Size:",
+          selectedFile.size
+        );
         formData.append("file", selectedFile);
       }
 
-      const response = await api.post("/message", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await api.post("/message", formData);
 
       const newMessage = response.data.message;
+      console.log("Message response:", newMessage);
       addMessage(newMessage);
 
       socket?.emit("new message", newMessage);
@@ -113,6 +119,7 @@ export default function ChatBox({ chat, currentUser }) {
 
       toast.success("Message sent!");
     } catch (error) {
+      console.error("Upload error:", error);
       toast.error(error.response?.data?.message || "Error sending message");
     } finally {
       setIsUploading(false);

@@ -1,19 +1,36 @@
 import Message from '../models/Message.js';
 import Chat from '../models/Chat.js';
 import User from '../models/User.js';
+import { uploadToCloudinary } from '../utils/cloudinary.js';
 
 // Send message
 export const sendMessage = async (req, res, next) => {
   try {
-    const { content, chatId, fileUrl } = req.body;
+    const { content, chatId } = req.body;
 
-    if (!content || !chatId) {
-      return res.status(400).json({ message: 'Invalid data passed into request' });
+    if (!content && !req.file) {
+      return res.status(400).json({ message: 'Message content or file is required' });
+    }
+
+    if (!chatId) {
+      return res.status(400).json({ message: 'Chat ID is required' });
+    }
+
+    let fileUrl = null;
+
+    // Handle file upload if exists
+    if (req.file) {
+      try {
+        const uploadedFile = await uploadToCloudinary(req.file);
+        fileUrl = uploadedFile.secure_url;
+      } catch (uploadError) {
+        return res.status(500).json({ message: 'Error uploading file: ' + uploadError.message });
+      }
     }
 
     let messageData = {
       sender: req.userId,
-      content,
+      content: content || 'Sent a file',
       chat: chatId,
     };
 

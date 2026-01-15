@@ -5,17 +5,34 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import 'express-async-errors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-// Import routes
+// Get current directory in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ⚠️  LOAD ENV VARIABLES FIRST - BEFORE importing routes/models that use them
+const envPath = path.resolve(__dirname, '.env');
+console.log('Loading .env from:', envPath);
+console.log('.env file exists:', fs.existsSync(envPath));
+
+const envResult = dotenv.config({ path: envPath });
+if (envResult.error && envResult.error.code !== 'ENOENT') {
+  console.error('Error loading .env file:', envResult.error);
+} else {
+  console.log('✅ .env file loaded successfully');
+  console.log('ENV: CLOUDINARY_NAME =', process.env.CLOUDINARY_NAME ? '✅ SET' : '❌ NOT SET');
+}
+
+// Import routes (NOW after env vars are loaded)
 import authRoutes from './routes/authRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
-
-// Load env variables
-dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);

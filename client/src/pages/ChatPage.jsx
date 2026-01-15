@@ -60,10 +60,10 @@ export default function ChatPage() {
       <div
         className={`${
           sidebarOpen ? "w-full md:w-1/3" : "hidden md:w-1/3 md:flex"
-        } bg-slate-900 border-r border-purple-500/20 flex flex-col transition-all duration-300`}
+        } bg-gradient-to-b from-slate-900 to-slate-950 border-r border-purple-500/20 flex flex-col transition-all duration-300`}
       >
         {/* Header with 3D Gradient */}
-        <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 p-4 text-white shadow-lg border-b border-purple-500/30">
+        <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 p-5 text-white shadow-xl border-b border-purple-400/30 animate-gradient">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
           <div className="relative z-10 flex justify-between items-center">
             <div>
@@ -72,17 +72,17 @@ export default function ChatPage() {
                 Welcome, {user?.name}! 👋
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 onClick={() => setIsGroupModalOpen(true)}
-                className="p-2 hover:bg-white/20 rounded-lg transition transform hover:scale-110 active:scale-95"
+                className="p-2 hover:bg-white/20 rounded-xl transition transform hover:scale-110 active:scale-95 duration-200 backdrop-blur-sm"
                 title="Create group"
               >
                 <FiPlus size={24} />
               </button>
               <button
                 onClick={handleLogout}
-                className="p-2 hover:bg-red-500/30 rounded-lg transition transform hover:scale-110 active:scale-95"
+                className="p-2 hover:bg-red-500/40 rounded-xl transition transform hover:scale-110 active:scale-95 duration-200 backdrop-blur-sm"
                 title="Logout"
               >
                 <FiLogOut size={24} />

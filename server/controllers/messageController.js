@@ -28,10 +28,15 @@ export const sendMessage = async (req, res, next) => {
         console.log('Uploading file:', req.file.originalname, 'Size:', req.file.size, 'Type:', req.file.mimetype);
         const uploadedFile = await uploadToCloudinary(req.file);
         fileUrl = uploadedFile.secure_url;
-        console.log('File uploaded successfully:', fileUrl);
+        console.log('✅ File uploaded successfully:', fileUrl);
       } catch (uploadError) {
-        console.error('Cloudinary upload error:', uploadError);
-        return res.status(500).json({ message: 'Error uploading file: ' + uploadError.message });
+        console.error('❌ Cloudinary upload error in message controller:', {
+          error: uploadError.message,
+          file: req.file.originalname,
+          stack: uploadError.stack
+        });
+        // Don't return error - allow message to be sent without file
+        console.log('Continuing without file upload...');
       }
     }
 

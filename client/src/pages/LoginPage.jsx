@@ -46,35 +46,37 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated 3D Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse top-0 -left-20"></div>
-        <div className="absolute w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse top-20 -right-20"></div>
-        <div className="absolute w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse bottom-0 left-1/3"></div>
+        <div className="absolute w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse top-0 -left-20 animate-float"></div>
+        <div className="absolute w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse top-20 -right-20 delay-1000 animate-float"></div>
+        <div className="absolute w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse bottom-0 left-1/3 delay-500 animate-float"></div>
       </div>
 
       {/* Card with 3D Effect */}
       <div className="relative z-10">
         <div className="group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 transform group-hover:scale-105"></div>
-          <div className="relative bg-slate-900 rounded-2xl p-8 w-full max-w-md backdrop-blur-xl border border-purple-500/20 shadow-2xl transform transition duration-500 hover:shadow-purple-500/50">
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 transform group-hover:scale-105 animate-gradient"></div>
+          <div className="relative bg-slate-900/95 rounded-3xl p-8 w-full max-w-md backdrop-blur-2xl border border-purple-400/30 shadow-2xl transform transition duration-500 hover:shadow-purple-500/50 group-hover:border-purple-400/50">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="inline-block p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 mb-4 transform hover:scale-110 transition">
-                <h1 className="text-4xl font-bold text-white">💬</h1>
+              <div className="inline-block p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 mb-4 transform hover:scale-110 transition shadow-lg animate-pulse-glow">
+                <h1 className="text-4xl font-bold text-white animate-float">
+                  💬
+                </h1>
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-pink-400 bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-pink-400 bg-clip-text text-transparent mb-2 animate-gradient">
                 BuzzChat
               </h1>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-300 text-sm font-medium">
                 {isLogin
-                  ? "Welcome back to the buzz!"
-                  : "Join the conversation"}
+                  ? "✨ Welcome back to the buzz!"
+                  : "✨ Join the conversation"}
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
-                <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 group-focus-within:text-blue-400 transition">
+                <div className="relative group/input">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 group-focus-within/input:text-blue-400 transition">
                     <FiUser size={20} />
                   </div>
                   <input

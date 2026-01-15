@@ -93,18 +93,22 @@ export default function ChatBox({ chat, currentUser }) {
 
       if (selectedFile) {
         console.log(
-          "Sending file:",
+          "🚀 Sending file to server:",
           selectedFile.name,
           "Size:",
-          selectedFile.size
+          selectedFile.size,
+          "Type:",
+          selectedFile.mimetype
         );
         formData.append("file", selectedFile);
+        console.log("FormData entries:", Array.from(formData.entries()));
       }
 
+      console.log("Posting to /message endpoint...");
       const response = await api.post("/message", formData);
 
       const newMessage = response.data.message;
-      console.log("Message response:", newMessage);
+      console.log("✅ Message response:", newMessage);
       addMessage(newMessage);
 
       socket?.emit("new message", newMessage);
@@ -144,9 +148,9 @@ export default function ChatBox({ chat, currentUser }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-slate-800 to-slate-900">
+    <div className="flex flex-col h-full bg-gradient-to-b from-slate-800/80 via-slate-900 to-slate-950">
       {/* Chat Header - 3D Effect */}
-      <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 p-4 text-white shadow-lg border-b border-purple-500/30 backdrop-blur-sm">
+      <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 p-5 text-white shadow-xl border-b border-purple-400/30 backdrop-blur-sm animate-gradient">
         <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
         <div className="relative z-10">
           <h2 className="text-xl font-bold drop-shadow-lg">{getChatName()}</h2>
@@ -157,20 +161,22 @@ export default function ChatBox({ chat, currentUser }) {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-transparent via-slate-900/30 to-slate-950/50">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="inline-block animate-spin mb-3">
-                <div className="w-8 h-8 border-4 border-purple-500 border-t-blue-500 rounded-full"></div>
+              <div className="inline-block animate-spin mb-4">
+                <div className="w-10 h-10 border-4 border-purple-500 border-t-blue-500 rounded-full shadow-lg shadow-purple-500/50"></div>
               </div>
-              <p className="text-gray-400">Loading messages...</p>
+              <p className="text-gray-300 font-medium">
+                Loading messages... ✨
+              </p>
             </div>
           </div>
         ) : messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500 text-center">
-              💬 No messages yet. <br /> Start the conversation!
+            <p className="text-gray-400 text-center text-lg">
+              💬 No messages yet. <br /> Start the conversation! 🚀
             </p>
           </div>
         ) : (
@@ -215,9 +221,9 @@ export default function ChatBox({ chat, currentUser }) {
       {/* Input Area - 3D Effect */}
       <form
         onSubmit={handleSendMessage}
-        className="p-4 border-t border-purple-500/20 bg-slate-800/50 backdrop-blur-sm"
+        className="p-5 border-t border-purple-500/20 bg-gradient-to-t from-slate-950 to-slate-800/50 backdrop-blur-sm shadow-lg"
       >
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-3 items-center">
           <input
             type="file"
             ref={fileInputRef}
@@ -230,7 +236,7 @@ export default function ChatBox({ chat, currentUser }) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className="flex-shrink-0 p-3 hover:bg-purple-500/30 rounded-xl transition transform hover:scale-110 active:scale-95 disabled:opacity-50"
+            className="flex-shrink-0 p-3 hover:bg-purple-500/40 rounded-xl transition transform hover:scale-110 active:scale-95 disabled:opacity-50 duration-300"
             title="Attach file"
           >
             <FiPaperclip size={20} className="text-purple-400" />
@@ -243,15 +249,15 @@ export default function ChatBox({ chat, currentUser }) {
               setMessageInput(e.target.value);
               handleTyping();
             }}
-            placeholder="Type a message..."
+            placeholder="Type a message... ✨"
             disabled={isUploading}
-            className="flex-1 px-4 py-3 bg-slate-700/50 border border-purple-500/30 rounded-xl focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/50 text-white placeholder-gray-500 transition backdrop-blur-sm disabled:opacity-50"
+            className="flex-1 px-5 py-3 bg-slate-700/40 border border-purple-500/30 rounded-xl focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/50 text-white placeholder-gray-400 transition backdrop-blur-sm disabled:opacity-50 hover:border-purple-500/50"
           />
 
           <button
             type="submit"
             disabled={isUploading || (!messageInput.trim() && !selectedFile)}
-            className="flex-shrink-0 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-3 rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-shrink-0 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-3 rounded-xl hover:shadow-lg hover:shadow-purple-500/60 transform hover:scale-105 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed duration-300"
           >
             {isUploading ? (
               <div className="animate-spin">⏳</div>

@@ -48,12 +48,12 @@ export default function ChatList({
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-gradient-to-b from-slate-900 to-slate-950">
-      <div className="p-5 border-b border-purple-500/20 glass-effect-lg">
+    <div className="flex-1 flex flex-col bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
+      <div className="p-3 md:p-5 border-b border-purple-500/20 glass-effect-lg flex-shrink-0">
         <motion.h2
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text mb-4"
+          className="text-2xl md:text-3xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text mb-4"
         >
           💬 Chats
         </motion.h2>
@@ -64,14 +64,14 @@ export default function ChatList({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="relative flex items-center gap-2 glass-effect-sm rounded-2xl px-4 py-3 border-purple-500/30 focus-within:border-purple-500/60 focus-within:glow-effect transition duration-300">
-            <FiSearch size={18} className="text-purple-400" />
+          <div className="relative flex items-center gap-2 glass-effect-sm rounded-2xl px-3 md:px-4 py-2 md:py-3 border-purple-500/30 focus-within:border-purple-500/60 focus-within:glow-effect transition duration-300">
+            <FiSearch size={16} className="md:size-18 text-purple-400" />
             <input
               type="text"
               placeholder="Search users... 🔍"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm font-medium"
+              className="flex-1 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm md:text-base font-medium"
             />
           </div>
 
@@ -120,7 +120,7 @@ export default function ChatList({
         </motion.div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
         {!chats || chats.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <motion.div

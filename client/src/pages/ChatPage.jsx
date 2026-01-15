@@ -55,12 +55,14 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-900">
+    <div className="flex flex-col md:flex-row h-[100dvh] bg-slate-900">
       {/* Sidebar */}
       <div
         className={`${
-          sidebarOpen ? "w-full md:w-1/3" : "hidden md:w-1/3 md:flex"
-        } bg-gradient-to-b from-slate-900 to-slate-950 border-r border-purple-500/20 flex flex-col transition-all duration-300`}
+          sidebarOpen
+            ? "flex flex-col w-full md:w-1/3"
+            : "hidden md:flex md:w-1/3"
+        } bg-gradient-to-b from-slate-900 to-slate-950 border-r border-purple-500/20 transition-all duration-300`}
       >
         {/* Header with 3D Gradient */}
         <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 p-5 text-white shadow-xl border-b border-purple-400/30 animate-gradient">
@@ -105,18 +107,32 @@ export default function ChatPage() {
           <ChatList
             chats={chats}
             selectedChat={selectedChat}
-            onSelectChat={setSelectedChat}
-            onAccessChat={handleAccessChat}
+            onSelectChat={(chat) => {
+              setSelectedChat(chat);
+              setSidebarOpen(false);
+            }}
+            onAccessChat={(userId) => {
+              handleAccessChat(userId);
+              setSidebarOpen(false);
+            }}
           />
         )}
       </div>
 
       {/* Chat Box */}
-      <div className="hidden md:flex md:w-2/3 flex-col bg-slate-900">
+      <div
+        className={`${
+          sidebarOpen ? "hidden md:flex" : "flex"
+        } md:flex md:w-2/3 flex-col flex-1 overflow-hidden bg-slate-900`}
+      >
         {selectedChat ? (
-          <ChatBox chat={selectedChat} currentUser={user} />
+          <ChatBox
+            chat={selectedChat}
+            currentUser={user}
+            onBack={() => setSidebarOpen(true)}
+          />
         ) : (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center flex-1">
             <div className="text-center">
               <div className="text-6xl mb-4">💬</div>
               <p className="text-gray-400 text-lg">

@@ -6,9 +6,9 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
-import { FiSend, FiPaperclip, FiX } from "react-icons/fi";
+import { FiSend, FiPaperclip, FiX, FiArrowLeft } from "react-icons/fi";
 
-export default function ChatBox({ chat, currentUser }) {
+export default function ChatBox({ chat, currentUser, onBack }) {
   const messages = useChatStore((state) => state.messages);
   const typingUsers = useChatStore((state) => state.typingUsers);
   const { setMessages, addMessage } = useChatStore();
@@ -157,7 +157,7 @@ export default function ChatBox({ chat, currentUser }) {
     >
       {/* Chat Header - Premium 3D Glass Effect */}
       <motion.div
-        className="relative glass-effect-lg p-6 text-white shadow-xl border-b border-purple-500/20 rounded-b-3xl"
+        className="relative glass-effect-lg p-4 md:p-6 text-white shadow-xl border-b border-purple-500/20 rounded-b-3xl flex-shrink-0"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
@@ -168,29 +168,41 @@ export default function ChatBox({ chat, currentUser }) {
           transition={{ duration: 8, repeat: Infinity }}
         />
         <div className="relative z-10 flex items-center justify-between">
-          <div>
-            <motion.h2
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-2xl font-bold bg-gradient-to-r from-purple-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg"
-            >
-              {getChatName()}
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-sm text-cyan-200/80"
-            >
-              {chat.users.length} member{chat.users.length > 1 ? "s" : ""} •
-              Active now
-            </motion.p>
+          <div className="flex items-center gap-3 flex-1">
+            {onBack && (
+              <motion.button
+                onClick={onBack}
+                className="md:hidden p-2 hover:bg-white/20 rounded-lg transition"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <FiArrowLeft size={24} />
+              </motion.button>
+            )}
+            <div>
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-lg md:text-2xl font-bold bg-gradient-to-r from-purple-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg"
+              >
+                {getChatName()}
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-xs md:text-sm text-cyan-200/80"
+              >
+                {chat.users.length} member{chat.users.length > 1 ? "s" : ""} •
+                Active now
+              </motion.p>
+            </div>
           </div>
           <motion.div
             animate={{ rotate: [0, 360] }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="text-2xl"
+            className="text-xl md:text-2xl flex-shrink-0"
           >
             💬
           </motion.div>
@@ -199,7 +211,7 @@ export default function ChatBox({ chat, currentUser }) {
 
       {/* Messages Area - Glass Container */}
       <motion.div
-        className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar"
+        className="flex-1 overflow-y-auto overflow-x-hidden p-3 md:p-6 space-y-4 custom-scrollbar"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -281,7 +293,7 @@ export default function ChatBox({ chat, currentUser }) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="px-6 py-3 glass-effect-sm border-t border-purple-500/20 rounded-t-2xl"
+          className="px-3 md:px-6 py-2 md:py-3 glass-effect-sm border-t border-purple-500/20 rounded-t-2xl flex-shrink-0"
         >
           <motion.div
             className="flex items-center gap-3 p-3 glass-effect-lg rounded-xl"
@@ -312,12 +324,12 @@ export default function ChatBox({ chat, currentUser }) {
       {/* Input Area - Floating Glass Bar */}
       <motion.form
         onSubmit={handleSendMessage}
-        className="p-6 border-t border-purple-500/20 glass-effect-lg rounded-t-3xl shadow-xl"
+        className="sticky bottom-0 p-3 md:p-6 border-t border-purple-500/20 glass-effect-lg rounded-t-3xl shadow-xl flex-shrink-0"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-2 md:gap-3 items-center">
           <input
             type="file"
             ref={fileInputRef}
@@ -330,12 +342,12 @@ export default function ChatBox({ chat, currentUser }) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className="flex-shrink-0 p-3 glass-effect-sm hover:glass-effect rounded-2xl transition glow-effect-sm disabled:opacity-50"
+            className="flex-shrink-0 p-2 md:p-3 glass-effect-sm hover:glass-effect rounded-2xl transition glow-effect-sm disabled:opacity-50"
             whileHover={{ scale: 1.15, rotate: 15 }}
             whileTap={{ scale: 0.9 }}
             title="Attach file"
           >
-            <FiPaperclip size={20} className="text-purple-400" />
+            <FiPaperclip size={18} className="md:size-20 text-purple-400" />
           </motion.button>
 
           <motion.input
@@ -347,14 +359,14 @@ export default function ChatBox({ chat, currentUser }) {
             }}
             placeholder="Type a message... ✨"
             disabled={isUploading}
-            className="flex-1 px-5 py-3 glass-effect-sm rounded-2xl focus:outline-none focus:glass-effect focus:glow-effect text-white placeholder-gray-500 transition disabled:opacity-50"
+            className="flex-1 px-3 md:px-5 py-2 md:py-3 glass-effect-sm rounded-2xl focus:outline-none focus:glass-effect focus:glow-effect text-white placeholder-gray-500 transition disabled:opacity-50 text-sm md:text-base"
             whileFocus={{ scale: 1.02 }}
           />
 
           <motion.button
             type="submit"
             disabled={isUploading || (!messageInput.trim() && !selectedFile)}
-            className="flex-shrink-0 bg-gradient-to-r from-purple-600 to-cyan-600 text-white p-3 rounded-2xl hover:glow-effect transform transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-shrink-0 bg-gradient-to-r from-purple-600 to-cyan-600 text-white p-2 md:p-3 rounded-2xl hover:glow-effect transform transition disabled:opacity-50 disabled:cursor-not-allowed"
             whileHover={{
               scale: 1.1,
               boxShadow: "0 0 20px rgba(139, 92, 246, 0.6)",
@@ -369,7 +381,7 @@ export default function ChatBox({ chat, currentUser }) {
                 ⏳
               </motion.div>
             ) : (
-              <FiSend size={20} />
+              <FiSend size={18} className="md:size-20" />
             )}
           </motion.button>
         </div>

@@ -42,7 +42,7 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
       className={`flex ${isOwn ? "justify-end" : "justify-start"} group`}
     >
       <motion.div
-        className={`max-w-xs px-5 py-4 rounded-3xl transition duration-300 ${
+        className={`max-w-xs md:max-w-md px-4 md:px-5 py-3 md:py-4 rounded-3xl transition duration-300 ${
           isOwn
             ? "bg-gradient-to-br from-purple-600/80 to-blue-600/80 text-white rounded-br-none glass-effect glow-effect shadow-lg"
             : "glass-effect-lg text-gray-100 rounded-bl-none glow-effect-sm shadow-lg"
@@ -54,20 +54,20 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="text-xs font-bold text-cyan-300 mb-2 uppercase tracking-widest"
+            className="text-xs md:text-sm font-bold text-cyan-300 mb-2 uppercase tracking-widest"
           >
             {message.sender.name}
           </motion.p>
         )}
 
-        <p className="break-words leading-relaxed text-base font-medium">
+        <p className="break-words leading-relaxed text-sm md:text-base font-medium">
           {message.content}
         </p>
 
         {/* File Display */}
         {message.fileUrl && (
           <motion.div
-            className="mt-4"
+            className="mt-3 md:mt-4"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
@@ -76,14 +76,14 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
               <motion.img
                 src={message.fileUrl}
                 alt="Shared file"
-                className="max-w-xs rounded-2xl cursor-pointer shadow-lg glow-effect-sm"
+                className="max-w-xs md:max-w-md rounded-2xl cursor-pointer shadow-lg glow-effect-sm"
                 whileHover={{ scale: 1.05 }}
                 onClick={() => window.open(message.fileUrl, "_blank")}
               />
             ) : (
               <motion.button
                 onClick={() => handleDownloadFile(message.fileUrl)}
-                className={`w-full flex items-center gap-3 p-3 rounded-xl transition duration-300 font-semibold ${
+                className={`w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-xl transition duration-300 font-semibold text-sm md:text-base ${
                   isOwn
                     ? "bg-white/20 hover:bg-white/30 glow-effect-sm"
                     : "bg-slate-700/40 hover:bg-slate-700/60 glass-effect-sm"
@@ -96,16 +96,16 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
                   animate={{ y: [0, -2, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
-                  <FiDownload size={20} />
+                  <FiDownload size={18} className="md:size-20" />
                 </motion.div>
-                <span className="text-sm truncate">📥 Download File</span>
+                <span className="truncate">📥 Download</span>
               </motion.button>
             )}
           </motion.div>
         )}
 
         {/* Time and Actions */}
-        <div className="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10">
+        <div className="flex items-center justify-between gap-2 mt-3 md:mt-4 pt-2 md:pt-3 border-t border-white/10">
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -120,7 +120,7 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
           {isOwn && (
             <motion.button
               onClick={handleDeleteMessage}
-              className="opacity-0 group-hover:opacity-100 transition-all p-2 hover:bg-red-500/40 rounded-lg duration-200 glow-effect-sm"
+              className="opacity-0 group-hover:opacity-100 transition-all p-1 md:p-2 hover:bg-red-500/40 rounded-lg duration-200 glow-effect-sm"
               whileHover={{ scale: 1.1, rotate: 10 }}
               whileTap={{ scale: 0.9 }}
               title="Delete message"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../utils/api";
 import toast from "react-hot-toast";
 import { FiSearch, FiPlus } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 export default function ChatList({
   chats = [],
@@ -47,78 +48,125 @@ export default function ChatList({
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-900 border-r border-purple-500/20">
-      <div className="p-5 border-b border-purple-500/20 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
-        <h2 className="text-3xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text mb-4 animate-gradient">
+    <div className="flex-1 flex flex-col bg-gradient-to-b from-slate-900 to-slate-950">
+      <div className="p-5 border-b border-purple-500/20 glass-effect-lg">
+        <motion.h2
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text mb-4"
+        >
           💬 Chats
-        </h2>
+        </motion.h2>
 
-        <div className="relative">
-          <div className="relative flex items-center gap-2 bg-slate-800/60 rounded-xl px-4 py-3 border border-purple-500/30 hover:border-purple-500/50 transition focus-within:border-purple-500 focus-within:shadow-lg focus-within:shadow-purple-500/30 backdrop-blur-sm">
+        <motion.div
+          className="relative"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="relative flex items-center gap-2 glass-effect-sm rounded-2xl px-4 py-3 border-purple-500/30 focus-within:border-purple-500/60 focus-within:glow-effect transition duration-300">
             <FiSearch size={18} className="text-purple-400" />
             <input
               type="text"
               placeholder="Search users... 🔍"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none text-sm font-medium"
+              className="flex-1 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm font-medium"
             />
           </div>
 
           {showUserList && users.length > 0 && (
-            <div className="absolute left-0 right-0 mt-3 bg-slate-800/80 border border-purple-500/30 rounded-xl max-h-48 overflow-y-auto z-50 backdrop-blur-lg shadow-xl shadow-purple-500/20">
-              {users.map((user) => (
-                <button
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              className="absolute left-0 right-0 mt-3 glass-effect-lg rounded-2xl max-h-48 overflow-y-auto z-50 shadow-2xl shadow-purple-500/20"
+            >
+              {users.map((user, index) => (
+                <motion.button
                   key={user._id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
                   onClick={() => handleUserSelect(user)}
-                  className="w-full p-3 hover:bg-purple-600/30 transition border-b border-purple-500/10 last:border-b-0 text-left duration-200 hover:translate-x-1"
+                  className="w-full p-4 hover:bg-purple-600/20 transition border-b border-purple-500/10 last:border-b-0 text-left duration-200 group card-hover"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold shadow-lg">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold shadow-lg glow-effect-sm"
+                    >
                       {user.name[0]}
-                    </div>
+                    </motion.div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-white">{user.name}</p>
-                      <p className="text-xs text-gray-400">{user.email}</p>
+                      <p className="font-semibold text-white group-hover:text-purple-200 transition">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-gray-400 truncate group-hover:text-gray-300 transition">
+                        {user.email}
+                      </p>
                     </div>
-                    <FiPlus className="text-purple-400 flex-shrink-0" />
+                    <motion.div
+                      whileHover={{ rotate: 90 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <FiPlus className="text-purple-400 flex-shrink-0" />
+                    </motion.div>
                   </div>
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {!chats || chats.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500 text-center">
-              💬 No chats yet. Search users to start!
-            </p>
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-center"
+            >
+              <p className="text-gray-500 text-lg">
+                💬 No chats yet. Search users to start!
+              </p>
+            </motion.div>
           </div>
         ) : (
-          chats.map((chat) => (
-            <button
+          chats.map((chat, index) => (
+            <motion.button
               key={chat._id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              whileHover={{ scale: 1.02 }}
               onClick={() => onSelectChat && onSelectChat(chat)}
-              className={`w-full p-4 border-b border-purple-500/10 transition-all duration-300 text-left group message-animate ${
+              className={`w-full p-4 border-b border-purple-500/10 transition-all duration-300 text-left group ${
                 selectedChat?._id === chat._id
-                  ? "bg-gradient-to-r from-purple-600/40 to-blue-600/40 border-l-4 border-l-purple-400 shadow-lg shadow-purple-500/20"
-                  : "hover:bg-purple-500/20 hover:border-l-4 hover:border-l-purple-500/50"
+                  ? "glass-effect-lg border-l-4 border-l-purple-400 shadow-lg shadow-purple-500/30"
+                  : "hover:glass-effect-sm hover:border-l-4 hover:border-l-purple-500/50"
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="relative flex-shrink-0 group/avatar">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold transform group-hover/avatar:scale-110 transition duration-300 shadow-lg">
+                <motion.div
+                  className="relative flex-shrink-0 group/avatar"
+                  whileHover={{ scale: 1.15 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold shadow-lg glow-effect">
                     {chat.isGroupChat
                       ? chat.chatName[0]
                       : chat.users.find(
                           (u) => u._id !== localStorage.getItem("user")
                         )?.name[0] || "?"}
                   </div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900 animate-pulse"></div>
-                </div>
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900 shadow-lg shadow-green-400/50"
+                  ></motion.div>
+                </motion.div>
 
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-white truncate group-hover:text-purple-200 transition">
@@ -144,7 +192,7 @@ export default function ChatList({
                   )}
                 </div>
               </div>
-            </button>
+            </motion.button>
           ))
         )}
       </div>

@@ -1,4 +1,6 @@
 import { FiDownload, FiTrash2 } from "react-icons/fi";
+import { downloadFile } from "../utils/downloadHelper";
+import { motion } from "framer-motion";
 
 export default function MessageBubble({ message, isOwn, onDelete }) {
   const getTime = (date) => {
@@ -12,133 +14,122 @@ export default function MessageBubble({ message, isOwn, onDelete }) {
     if (onDelete) onDelete(message._id);
   };
 
-  const handleDownloadFile = async (fileUrl) => {
-    try {
-      // Get the filename from the URL
-      const urlParts = fileUrl.split('/');
-      const filename = urlParts[urlParts.length - 1].split('?')[0] || 'download';
-
-      // Fetch the file
-      const response = await fetch(fileUrl);
-      if (!response.ok) throw new Error('Failed to download file');
-
-      // Create a blob from the response
-      const blob = await response.blob();
-
-      // Create a temporary download link
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = filename;
-      link.style.display = 'none';
-
-      // Trigger the download
-      document.body.appendChild(link);
-      link.click();
-
-      // Cleanup
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(downloadUrl);
-
-      console.log('✅ File downloaded:', filename);
-    } catch (error) {
-      console.error('❌ Download failed:', error);
-      // Fallback: open in new tab
-      window.open(fileUrl, '_blank');
-    }
+  const handleDownloadFile = (fileUrl) => {
+    downloadFile(fileUrl);
   };
 
   if (message.isDeleted) {
     return (
-      <div
-        className={`flex ${
-          isOwn ? "justify-end" : "justify-start"
-        } message-animate`}
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
       >
-        <div
-          className={`max-w-xs px-4 py-2 rounded-xl backdrop-blur-sm ${
-            isOwn
-              ? "bg-red-500/20 border border-red-500/30"
-              : "bg-gray-500/20 border border-gray-500/30"
-          }`}
-        >
+        <div className="max-w-xs px-4 py-2 glass-effect-sm rounded-2xl">
           <p className="text-sm italic text-gray-400">✓ Message was deleted</p>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div
-      className={`flex ${
-        isOwn ? "justify-end" : "justify-start"
-      } group message-animate`}
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.3 }}
+      className={`flex ${isOwn ? "justify-end" : "justify-start"} group`}
     >
-      <div
-        className={`max-w-xs px-5 py-3 rounded-2xl backdrop-blur-sm transition duration-300 ${
+      <motion.div
+        className={`max-w-xs px-5 py-4 rounded-3xl transition duration-300 ${
           isOwn
-            ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-br-none shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60"
-            : "bg-slate-700/60 text-gray-100 rounded-bl-none border border-slate-600/50 shadow-lg shadow-slate-700/40 hover:bg-slate-700/70 hover:border-slate-500/60"
+            ? "bg-gradient-to-br from-purple-600/80 to-blue-600/80 text-white rounded-br-none glass-effect glow-effect shadow-lg"
+            : "glass-effect-lg text-gray-100 rounded-bl-none glow-effect-sm shadow-lg"
         }`}
+        whileHover={{ y: -2 }}
       >
         {!isOwn && (
-          <p className="text-xs font-bold text-purple-300 mb-2 uppercase tracking-wide">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-xs font-bold text-cyan-300 mb-2 uppercase tracking-widest"
+          >
             {message.sender.name}
-          </p>
+          </motion.p>
         )}
 
-        <p className="break-words leading-relaxed text-base">
+        <p className="break-words leading-relaxed text-base font-medium">
           {message.content}
         </p>
 
         {/* File Display */}
         {message.fileUrl && (
-          <div className="mt-3">
+          <motion.div
+            className="mt-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+          >
             {message.fileUrl.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-              <img
+              <motion.img
                 src={message.fileUrl}
                 alt="Shared file"
-                className="max-w-xs rounded-xl mt-3 cursor-pointer hover:opacity-90 transition shadow-lg"
+                className="max-w-xs rounded-2xl cursor-pointer shadow-lg glow-effect-sm"
+                whileHover={{ scale: 1.05 }}
                 onClick={() => window.open(message.fileUrl, "_blank")}
               />
             ) : (
-              <button
+              <motion.button
                 onClick={() => handleDownloadFile(message.fileUrl)}
-                className={`w-full flex items-center gap-2 p-3 rounded-lg transition duration-300 font-semibold ${
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition duration-300 font-semibold ${
                   isOwn
-                    ? "bg-white/20 hover:bg-white/30"
-                    : "bg-slate-600/60 hover:bg-slate-600/80"
+                    ? "bg-white/20 hover:bg-white/30 glow-effect-sm"
+                    : "bg-slate-700/40 hover:bg-slate-700/60 glass-effect-sm"
                 }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 title="Click to download file"
               >
-                <FiDownload size={18} />
+                <motion.div
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <FiDownload size={20} />
+                </motion.div>
                 <span className="text-sm truncate">📥 Download File</span>
-              </button>
+              </motion.button>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Time and Actions */}
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-white/10">
-          <p
+        <div className="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
             className={`text-xs font-medium ${
-              isOwn ? "text-purple-200/80" : "text-gray-400/80"
+              isOwn ? "text-purple-200/70" : "text-gray-400/70"
             }`}
           >
             {getTime(message.createdAt)}
-          </p>
+          </motion.p>
 
           {isOwn && (
-            <button
+            <motion.button
               onClick={handleDeleteMessage}
-              className="opacity-0 group-hover:opacity-100 transition-all p-1.5 hover:bg-red-500/40 rounded-lg duration-200 hover:scale-110"
+              className="opacity-0 group-hover:opacity-100 transition-all p-2 hover:bg-red-500/40 rounded-lg duration-200 glow-effect-sm"
+              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
               title="Delete message"
             >
               <FiTrash2 size={16} className="text-red-400" />
-            </button>
+            </motion.button>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

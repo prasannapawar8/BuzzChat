@@ -3,6 +3,7 @@ import { useChatStore } from "../utils/store";
 import { getSocket } from "../utils/socket";
 import api from "../utils/api";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
 import { FiSend, FiPaperclip, FiX } from "react-icons/fi";
@@ -148,80 +149,173 @@ export default function ChatBox({ chat, currentUser }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-slate-800/80 via-slate-900 to-slate-950">
-      {/* Chat Header - 3D Effect */}
-      <div className="relative bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 p-5 text-white shadow-xl border-b border-purple-400/30 backdrop-blur-sm animate-gradient">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
-        <div className="relative z-10">
-          <h2 className="text-xl font-bold drop-shadow-lg">{getChatName()}</h2>
-          <p className="text-sm text-purple-100">
-            {chat.users.length} member{chat.users.length > 1 ? "s" : ""}
-          </p>
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900"
+    >
+      {/* Chat Header - Premium 3D Glass Effect */}
+      <motion.div
+        className="relative glass-effect-lg p-6 text-white shadow-xl border-b border-purple-500/20 rounded-b-3xl"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-purple-600/40 via-blue-600/40 to-cyan-600/40 rounded-b-3xl"
+          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <motion.h2
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-2xl font-bold bg-gradient-to-r from-purple-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg"
+            >
+              {getChatName()}
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-sm text-cyan-200/80"
+            >
+              {chat.users.length} member{chat.users.length > 1 ? "s" : ""} •
+              Active now
+            </motion.p>
+          </div>
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="text-2xl"
+          >
+            💬
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-transparent via-slate-900/30 to-slate-950/50">
+      {/* Messages Area - Glass Container */}
+      <motion.div
+        className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         {isLoading ? (
-          <div className="flex items-center justify-center h-full">
+          <motion.div
+            className="flex items-center justify-center h-full"
+            animate={{ scale: [0.95, 1.05, 0.95] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
             <div className="text-center">
-              <div className="inline-block animate-spin mb-4">
-                <div className="w-10 h-10 border-4 border-purple-500 border-t-blue-500 rounded-full shadow-lg shadow-purple-500/50"></div>
-              </div>
-              <p className="text-gray-300 font-medium">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="w-12 h-12 border-4 border-purple-500 border-t-cyan-500 rounded-full mx-auto mb-4 glow-effect"
+              />
+              <p className="text-gray-300 font-semibold">
                 Loading messages... ✨
               </p>
             </div>
-          </div>
+          </motion.div>
         ) : messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-400 text-center text-lg">
-              💬 No messages yet. <br /> Start the conversation! 🚀
-            </p>
-          </div>
+          <motion.div
+            className="flex items-center justify-center h-full"
+            animate={{ y: [0, -20, 0] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <div className="text-center">
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-6xl mb-4"
+              >
+                💬
+              </motion.div>
+              <p className="text-gray-400 text-lg">
+                No messages yet. Start the conversation! 🚀
+              </p>
+            </div>
+          </motion.div>
         ) : (
           <>
-            {messages.map((message) => (
-              <MessageBubble
-                key={message._id}
-                message={message}
-                isOwn={message.sender._id === currentUser._id}
-                onDelete={handleDeleteMessage}
-              />
-            ))}
-            {typingUsers.length > 0 && <TypingIndicator />}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-3"
+            >
+              {messages.map((message, index) => (
+                <motion.div
+                  key={message._id}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <MessageBubble
+                    message={message}
+                    isOwn={message.sender._id === currentUser._id}
+                    onDelete={handleDeleteMessage}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+            {typingUsers.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <TypingIndicator />
+              </motion.div>
+            )}
             <div ref={messagesEndRef} />
           </>
         )}
-      </div>
+      </motion.div>
 
-      {/* File Preview */}
+      {/* File Preview - Glass Effect */}
       {selectedFile && (
-        <div className="px-4 py-2 bg-slate-700/50 border-t border-purple-500/20 backdrop-blur-sm">
-          <div className="flex items-center gap-2 p-2 bg-slate-600/50 rounded-lg">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="px-6 py-3 glass-effect-sm border-t border-purple-500/20 rounded-t-2xl"
+        >
+          <motion.div
+            className="flex items-center gap-3 p-3 glass-effect-lg rounded-xl"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+          >
             <div className="flex-1">
-              <p className="text-sm text-white font-medium truncate">
+              <p className="text-sm text-white font-semibold truncate">
                 📎 {selectedFile.name}
               </p>
               <p className="text-xs text-gray-400">
                 {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
               </p>
             </div>
-            <button
+            <motion.button
               type="button"
               onClick={() => setSelectedFile(null)}
-              className="p-1 hover:bg-red-500/30 rounded-lg transition"
+              className="p-2 hover:bg-red-500/30 rounded-lg transition glow-effect-sm"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <FiX size={18} className="text-red-400" />
-            </button>
-          </div>
-        </div>
+            </motion.button>
+          </motion.div>
+        </motion.div>
       )}
 
-      {/* Input Area - 3D Effect */}
-      <form
+      {/* Input Area - Floating Glass Bar */}
+      <motion.form
         onSubmit={handleSendMessage}
-        className="p-5 border-t border-purple-500/20 bg-gradient-to-t from-slate-950 to-slate-800/50 backdrop-blur-sm shadow-lg"
+        className="p-6 border-t border-purple-500/20 glass-effect-lg rounded-t-3xl shadow-xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
       >
         <div className="flex gap-3 items-center">
           <input
@@ -232,17 +326,19 @@ export default function ChatBox({ chat, currentUser }) {
             accept="image/*,.pdf,.doc,.docx,.txt,.xlsx"
           />
 
-          <button
+          <motion.button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className="flex-shrink-0 p-3 hover:bg-purple-500/40 rounded-xl transition transform hover:scale-110 active:scale-95 disabled:opacity-50 duration-300"
+            className="flex-shrink-0 p-3 glass-effect-sm hover:glass-effect rounded-2xl transition glow-effect-sm disabled:opacity-50"
+            whileHover={{ scale: 1.15, rotate: 15 }}
+            whileTap={{ scale: 0.9 }}
             title="Attach file"
           >
             <FiPaperclip size={20} className="text-purple-400" />
-          </button>
+          </motion.button>
 
-          <input
+          <motion.input
             type="text"
             value={messageInput}
             onChange={(e) => {
@@ -251,22 +347,33 @@ export default function ChatBox({ chat, currentUser }) {
             }}
             placeholder="Type a message... ✨"
             disabled={isUploading}
-            className="flex-1 px-5 py-3 bg-slate-700/40 border border-purple-500/30 rounded-xl focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/50 text-white placeholder-gray-400 transition backdrop-blur-sm disabled:opacity-50 hover:border-purple-500/50"
+            className="flex-1 px-5 py-3 glass-effect-sm rounded-2xl focus:outline-none focus:glass-effect focus:glow-effect text-white placeholder-gray-500 transition disabled:opacity-50"
+            whileFocus={{ scale: 1.02 }}
           />
 
-          <button
+          <motion.button
             type="submit"
             disabled={isUploading || (!messageInput.trim() && !selectedFile)}
-            className="flex-shrink-0 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-3 rounded-xl hover:shadow-lg hover:shadow-purple-500/60 transform hover:scale-105 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed duration-300"
+            className="flex-shrink-0 bg-gradient-to-r from-purple-600 to-cyan-600 text-white p-3 rounded-2xl hover:glow-effect transform transition disabled:opacity-50 disabled:cursor-not-allowed"
+            whileHover={{
+              scale: 1.1,
+              boxShadow: "0 0 20px rgba(139, 92, 246, 0.6)",
+            }}
+            whileTap={{ scale: 0.9 }}
           >
             {isUploading ? (
-              <div className="animate-spin">⏳</div>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity }}
+              >
+                ⏳
+              </motion.div>
             ) : (
               <FiSend size={20} />
             )}
-          </button>
+          </motion.button>
         </div>
-      </form>
-    </div>
+      </motion.form>
+    </motion.div>
   );
 }
